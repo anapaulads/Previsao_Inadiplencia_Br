@@ -1,15 +1,25 @@
-# Previsão do Percentual de Inadimplência no Brasil a partir de Indicadores Macroeconômicos
+# Previsão do Percentual de Inadimplência no Brasil.
 
 ## Sobre o Projeto
-Projeto final da formação em Ciência de Dados pela EBAC, realizado em parceria com uma empresa do setor financeiro. O objetivo é construir um modelo preditivo capaz de estimar o percentual de inadimplência no Brasil, utilizando séries temporais de indicadores macroeconômicos e socioeconômicos públicos (BACEN e IBGE). O projeto une fundamentos de economia aplicada, engenharia de dados e inteligência artificial para propor uma abordagem eficiente e realista de previsão de risco no cenário macroeconômico brasileiro.
+Este projeto foi desenvolvido como trabalho final da formação em Ciência de Dados da EBAC.
+
+O objetivo é analisar e prever a taxa de inadimplência de pessoas físicas no Brasil utilizando variáveis macroeconômicas e de crédito, integrando fundamentos de economia aplicada com técnicas avançadas de ciência de dados e machine learning.
+
+A solução proposta visa apoiar instituições financeiras, órgãos reguladores e formuladores de políticas públicas na tomada de decisões estratégicas, ajudando a antecipar movimentos da inadimplência em resposta a mudanças econômicas.
 
 ## Objetivo
-Desenvolver um modelo de machine learning capaz de prever a taxa de inadimplência no Brasil com base em dados agregados de crédito e indicadores econômicos, como taxa de juros, inflação, comprometimento de renda e desemprego. O foco está em antecipar tendências nacionais, subsidiando decisões estratégicas de instituições financeiras, órgãos reguladores e formuladores de políticas públicas.
+Desenvolver um modelo de machine learning capaz de prever a taxa de inadimplência no Brasil com base em dados agregados de crédito e indicadores econômicos, como taxa de juros, inflação, comprometimento de renda e desemprego. O foco está em antecipar tendências nacionais.
 
 ## Base de Dados
-- **dados_pf_bacen.csv**: Séries históricas de crédito, inadimplência e juros do Banco Central do Brasil (BACEN).
-- **df_features.csv / df_features_v2.csv**: Bases processadas com variáveis derivadas e lags temporais.
-- **ipca_mes_1737.xlsx, desocupacao_6381.xlsx, ocupacao_4092.xlsx, rendimento_5436.xlsx**: Indicadores socioeconômicos do IBGE (inflação, desemprego, ocupação, renda).
+
+O projeto utilizou dados públicos do:
+- Banco Central do Brasil (BACEN)  
+**dados_pf_bacen.csv**: Séries históricas de crédito, inadimplência e juros do Banco Central do Brasil (BACEN).
+- Instituto Brasileiro de Geografia e Estatística (IBGE)  
+**ipca_mes_1737.xlsx, desocupacao_6381.xlsx, ocupacao_4092.xlsx, rendimento_5436.xlsx**: Indicadores socioeconômicos do IBGE (inflação, desemprego, ocupação, renda).  
+**df_features.csv / df_features_v2.csv**: Bases processadas com variáveis derivadas e lags temporais.
+  
+Abrangendo o período de 2012 até os dados mais recentes disponíveis.
 
 ## Estrutura do Projeto
 ```
@@ -18,12 +28,20 @@ Desenvolver um modelo de machine learning capaz de prever a taxa de inadimplênc
 ├── df_features.csv / df_features_v2.csv          # Features processadas e variáveis derivadas
 ├── arquivos .xlsx                                # Indicadores econômicos IBGE
 ```
+- Seção 1: Definição do problema e objetivos de negócio
+- Seção 2: Preparação e integração dos dados
+- Seção 3: Análise Exploratória de Dados (EDA)
+- Seção 4: Engenharia de atributos e transformação de séries temporais
+- Seção 5: Modelagem preditiva (Machine Learning)
+- Seção 6: Novas estratérias e modelagem
+- Seção 7: Avaliação dos resultados e insights obtidos
 
 ## Resultados
-- Construção de modelos de regressão para previsão do percentual de inadimplência nacional.
-- Engenharia de variáveis para capturar tendências, variações e eventos de crise (recessão, pandemia).
-- Validação robusta com TimeSeriesSplit, respeitando a ordem temporal dos dados.
-- Modelo LightGBM otimizado apresentou maior robustez e menor erro absoluto médio (MAE) no conjunto de teste, superando XGBoost e RandomForest.
+Na etapa de modelagem foram testados diferentes algoritmos, como: Random Forest, XGBoost e LightGBM, sempre utilizando validação adequada para séries temporais. O Random Forest serviu como baseline, mas apresentou limitação em generalizar, com erro médio absoluto (MAE) em torno de 26,9 p.p. no conjunto de teste. O XGBoost, mesmo mostrando bom desempenho em validação (MAE próximo de 11,3 p.p.), não manteve a performance em dados não vistos, também ficando em 26,9 p.p. no teste, evidenciando sobreajuste.
+
+O LightGBM otimizado, por outro lado, foi o modelo que melhor equilibrou aprendizado e generalização. Incorporando variáveis de variação percentual, lags de curto prazo e marcadores de choques econômicos (como recessão e pandemia), reduziu o erro médio para 16,4 p.p. no teste — uma melhoria de aproximadamente 39% em relação ao baseline. Esse resultado mostra que modelos mais parsimoniosos e com variáveis que capturam a dinâmica temporal são mais robustos frente às mudanças estruturais da economia.
+
+Em termos de negócio, isso significa que o modelo é capaz de antecipar tendências de inadimplência com maior confiabilidade, principalmente ao identificar o impacto do mercado de trabalho, da inflação e do custo do crédito, variáveis que se mostraram determinantes ao longo da análise.
 
 ## Tecnologias e Bibliotecas
 - Python (Pandas, NumPy, Scikit-learn, XGBoost, LightGBM, Matplotlib, Seaborn, Plotly)
@@ -31,12 +49,15 @@ Desenvolver um modelo de machine learning capaz de prever a taxa de inadimplênc
 - Visual Studio Code
 
 ## Insights
-- O tempo (trimestre) exerce forte influência sobre todas as variáveis, exigindo técnicas para neutralizar tendências espúrias.
-- Variáveis de eventos de crise (recessão 2014-2016, pandemia pós-2020) são cruciais para explicar saltos na inadimplência.
-- O modelo LightGBM, ao incorporar variações percentuais e lags, mostrou-se mais robusto para prever cenários futuros e lidar com concept drift.
-- O XGBoost apresentou overfitting, com bom desempenho em validação cruzada mas queda acentuada no teste.
-- A explicabilidade dos modelos permitiu identificar os principais determinantes macroeconômicos da inadimplência nacional.
+Durante a EDA, algumas descobertas importantes foram feitas:
 
+- O tempo se mostrou a variável mais dominante, influenciando direta ou indiretamente quase todas as outras.
+- Correlações bivariadas simples (ex.: entre rendimento médio e inadimplência) revelaram-se enganosas devido ao efeito do tempo, que atua como uma variável oculta.
+- A inadimplência e o rendimento médio cresceram juntos ao longo dos anos, mas isso não significa relação causal direta — trata-se de uma correlação espúria.
+- Para análises robustas, foi necessário ajustar variáveis econômicas (ex.: deflacionar rendimentos) e aplicar técnicas que neutralizem o efeito temporal.
+
+**Conclusão principal:** Modelos que desconsiderem a forte influência do tempo tendem a gerar interpretações equivocadas
+  
 ## Como Rodar
 1. Clone este repositório:
    ```bash
@@ -49,13 +70,11 @@ Desenvolver um modelo de machine learning capaz de prever a taxa de inadimplênc
 3. Abra o notebook `Projeto_Semantix-Versao_final-Ana_Paula.ipynb` e execute as células sequencialmente.
 
 ## Contribuições
-Sugestões, melhorias e novas ideias são bem-vindas! Sinta-se à vontade para abrir issues ou pull requests.
+Sugestões, melhorias e novas ideias são bem-vindas!  
+Sinta-se à vontade para abrir issues ou pull requests.
 
 ## Autoria
 Projeto desenvolvido por Ana Paula Dias, como projeto final da formação em Ciência de Dados pela EBAC.
-
----
-
 
 ---
 
